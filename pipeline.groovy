@@ -10,6 +10,7 @@ pipeline{
     }
     parameters{
         string defaultValue: 'dev', description: 'colocar un branch a deploy', name: 'BRANCH', trim: false
+        choice (name: 'SCAN_GRYPE', choices: ['NO', 'YES'], description: 'Activar escaner con grype')
     }
     environment{
         //workspace="/data/"
@@ -44,13 +45,14 @@ pipeline{
                 sh "cp am-core-web-service/target/app.jar /tmp/"
             }
         }
-        /*stage("Test vulnerability")
+        stage("Test vulnerability")
         {
+            when (equials expected: 'YES', actual: SCAN_GRYPE)
             steps{
                sh "/grype /tmp/app.jar > informe-scan.txt"
                archiveArtifacts artifacts: 'informe-scan.txt', onlyIfSuccessful: true
             }
-        }*/
+        }
         stage('sonarqube analysis'){
             steps{
                script{
