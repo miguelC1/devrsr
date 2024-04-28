@@ -13,8 +13,16 @@ pipeline{
     }
     environment{
         //workspace="/data/"
+        VAR = "NUEVO"
     }
     stages{
+        stage("create build name"){
+            steps{
+                script{
+                    currentBuild.displayName= "service_back-"+currentBuild.number
+                }
+            }
+        }
         stage("Limpiar"){
             steps{
                 cleanWs()
